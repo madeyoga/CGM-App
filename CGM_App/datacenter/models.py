@@ -5,6 +5,9 @@ from django.db import models
 class Merek(models.Model):
     nama_merek = models.CharField(max_length=256)
 
+    def __str__(self):
+        return "{}".format(self.nama_merek)
+
 
 class Barang(models.Model):
     merek = models.ForeignKey(Merek, on_delete=models.CASCADE)
@@ -13,9 +16,15 @@ class Barang(models.Model):
     part_nomor_barang = models.CharField(max_length=128)
     quantity = models.IntegerField()
 
+    def __str__(self):
+        return "{}-{}-{}".format(self.merek, self.nama_barang, self.harga)
+
 
 class Pembeli(models.Model):
     nama_pembeli = models.CharField(max_length=256)
+
+    def __str__(self):
+        return "{}".format(self.nama_pembeli)
 
 
 class Penjualan(models.Model):
@@ -23,6 +32,9 @@ class Penjualan(models.Model):
     barangs = models.ManyToManyField(Barang, through="DetailPenjualan")
     tanggal = models.DateTimeField(auto_now=True)
     harga_total = models.BigIntegerField()
+
+    def __str__(self):
+        return "{}-{}-{}".format(self.tanggal, self.pembeli, self.harga_total)
 
 
 class DetailPenjualan(models.Model):
@@ -32,6 +44,9 @@ class DetailPenjualan(models.Model):
     jumlah = models.IntegerField()
     total_harga = models.IntegerField()
 
+    def __str__(self):
+        return "{}-{}-{}".format(self.penjualan, self.barang, self.jumlah)
+
 
 class Order(models.Model):
     barang = models.ForeignKey(Barang, on_delete=models.CASCADE)
@@ -40,3 +55,6 @@ class Order(models.Model):
     barang_datang = models.BooleanField()
     tanggal_datang = models.DateTimeField(null=True, blank=True, default="")
     batal = models.BooleanField()
+    
+    def __str__(self):
+        return "{}-{}-{}".format(self.tanggal_order, self.barang, self.batal)
