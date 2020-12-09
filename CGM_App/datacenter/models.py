@@ -55,6 +55,6 @@ class Order(models.Model):
     barang_datang = models.BooleanField()
     tanggal_datang = models.DateTimeField(null=True, blank=True, default="")
     batal = models.BooleanField()
-    
+
     def __str__(self):
         return "{}-{}-{}".format(self.tanggal_order, self.barang, self.batal)

@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'datacenter.apps.DatacenterConfig'
+    'datacenter.apps.DatacenterConfig',
+    'webclient.apps.WebclientConfig'
 ]
 
 MIDDLEWARE = [
