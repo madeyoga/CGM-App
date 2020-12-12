@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'datacenter.apps.DatacenterConfig',
-    'webclient.apps.WebclientConfig'
+    'webclient.apps.WebclientConfig',
+    'restapi.apps.RestapiConfig'
 ]
 
 MIDDLEWARE = [
