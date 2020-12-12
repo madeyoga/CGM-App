@@ -5,7 +5,7 @@ var app = new Vue({
 	delimiters: ['[[', ']]'],
 	data: {
 		initialData: initialData,
-		hargaBarang: -1,
+		hargaBarang: null,
 		hargaBarangPreview: ""
 	},
 	methods: {

@@ -12,94 +12,105 @@
 {% block content %}
 	<!-- APP -->
 	<div id="app" class="container">
-		<div class="row mt-4 mb-4">
-			<h1 class="col-md-6">Gudang</h1>
-			<!-- <div class="col-md-6">
-				<button class="btn btn-primary float-right">Tambah Barang</button>
-			</div> -->
+		<div class="shadow p-3 card mb-5 mt-5">
+			<div class="card-body">
+				<div class="row mt-4 mb-4">
+					<h1 class="col-md-6">Input Barang</h1>
+					<!-- <div class="col-md-6">
+						<button class="btn btn-primary float-right">Tambah Barang</button>
+					</div> -->
+				</div>
+				<!-- FORM -->
+				<form action="/webclient/post_item/" method="POST">
+					{% csrf_token %}
+					<div class="form-group row">
+						<label for="nama_barang" class="col-sm-2 col-form-label">Nama Barang</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="masukan nama barang...">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="merek_barang" class="col-sm-2 col-form-label">Merek Barang</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="merek_barang" name="merek_barang" placeholder="masukan nama merek barang...">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="harga_barang_preview" class="col-sm-2 col-form-label">Harga Barang</label>
+						<div class="col-sm-10 input-group">
+							<input 
+								type="number" v-model="hargaBarang" v-on:change="processNumber()" min="50" class="form-control" 
+								id="harga_barang" name="harga_barang" placeholder="masukan harga barang...">
+							
+							<div class="input-group-prepend">
+								<div class="input-group-text">Rp.</div>
+							</div>
+
+							<input type="text" name="harga_barang_preview" v-model="hargaBarangPreview" readonly>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="part_nomer" class="col-sm-2 col-form-label">Part Nomer</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="part_nomer" name="part_nomer" placeholder="masukan part nomer barang...">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="jumlah_stock_barang" class="col-sm-2 col-form-label">Jumlah Stock</label>
+						<div class="col-sm-10">
+							<input type="number" class="form-control" id="jumlah_stock_barang" name="jumlah_stock_barang" min="0" placeholder="masukan jumlah stock barang...">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="jumlah_stock_barang" class="col-sm-2 col-form-label"></label>
+						<div class="col-sm-10">
+							<button type="submit" class="btn btn-primary">Tambah Barang</button>
+						</div>
+					</div>
+				</form>
+				<!-- FORM END -->
+			</div>
 		</div>
 
-		<!-- FORM -->
-		<form class="mb-5" action="/webclient/post_item/" method="POST">
-			{% csrf_token %}
-			<div class="form-group row">
-				<label for="nama_barang" class="col-sm-2 col-form-label">Nama Barang</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="masukan nama barang...">
+		<div class="shadow p-3 card mb-5 mt-5">
+			<div class="card-body">
+				<!-- TITLE GUDANG -->
+				<div class="row mt-4 mb-4">
+					<h1 class="col-md-6">Gudang</h1>
 				</div>
+				<!-- TABLE -->
+				<table id="table-items" class="table table-striped table-bordered" style="width:100%">
+					<thead>
+						<tr>
+							<th>Name Barang</th>
+							<th>Merek Barang</th>
+							<th>Part Nomer</th>
+							<th>Jumlah Stok</th>
+							<th>Harga</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="item in initialData" v-bind:key="item.id">
+							<td>[[ item.nama_barang ]]</td>
+							<td>[[ item.merek__nama_merek ]]</td>
+							<td>[[ item.part_nomor_barang ]]</td>
+							<td class="dt-body-right">[[ item.quantity ]]</td>
+							<td class="dt-body-right">[[ item.harga_preview ]]</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Name Barang</th>
+							<th>Merek Barang</th>
+							<th>Part Nomer</th>
+							<th>Jumlah Stok</th>
+							<th>Harga</th>
+						</tr>
+					</tfoot>
+				</table>
+				<!-- TABLE END -->
 			</div>
-			<div class="form-group row">
-				<label for="merek_barang" class="col-sm-2 col-form-label">Merek Barang</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="merek_barang" name="merek_barang" placeholder="masukan nama merek barang...">
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="harga_barang_preview" class="col-sm-2 col-form-label">Harga Barang</label>
-				<div class="col-sm-10 input-group">
-					<input 
-						type="number" v-model="hargaBarang" v-on:change="processNumber()" min="50" class="form-control" 
-						id="harga_barang" name="harga_barang" placeholder="masukan harga barang...">
-					
-					<div class="input-group-prepend">
-						<div class="input-group-text">Rp.</div>
-					</div>
-
-					<input type="text" name="harga_barang_preview" v-model="hargaBarangPreview" readonly>
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="part_nomer" class="col-sm-2 col-form-label">Part Nomer</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="part_nomer" name="part_nomer" placeholder="masukan part nomer barang...">
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="jumlah_stock_barang" class="col-sm-2 col-form-label">Jumlah Stock</label>
-				<div class="col-sm-10">
-					<input type="number" class="form-control" id="jumlah_stock_barang" name="jumlah_stock_barang" min="0" placeholder="masukan jumlah stock barang...">
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="jumlah_stock_barang" class="col-sm-2 col-form-label"></label>
-				<div class="col-sm-10">
-					<button type="submit" class="btn btn-primary">Tambah Barang</button>
-				</div>
-			</div>
-		</form>
-		<!-- FORM END -->
-
-		<!-- TABLE -->
-		<table id="table-items" class="table table-striped table-bordered" style="width:100%">
-	        <thead>
-	            <tr>
-	                <th>Name Barang</th>
-	                <th>Merek Barang</th>
-	                <th>Part Nomer</th>
-	                <th>Jumlah Stok</th>
-	                <th>Harga</th>
-	            </tr>
-	        </thead>
-	        <tbody>
-				<tr v-for="item in initialData" v-bind:key="item.id">
-					<td>[[ item.nama_barang ]]</td>
-					<td>[[ item.merek__nama_merek ]]</td>
-					<td>[[ item.part_nomor_barang ]]</td>
-					<td class="dt-body-right">[[ item.quantity ]]</td>
-					<td class="dt-body-right">[[ item.harga_preview ]]</td>
-				</tr>
-	        </tbody>
-	        <tfoot>
-	            <tr>
-	                <th>Name Barang</th>
-	                <th>Merek Barang</th>
-	                <th>Part Nomer</th>
-	                <th>Jumlah Stok</th>
-	                <th>Harga</th>
-	            </tr>
-	        </tfoot>
-		</table>
-		<!-- TABLE END -->
+		</div>
 	</div>
 	<!-- APP END -->
 {% endblock %}
