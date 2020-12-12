@@ -1,7 +1,10 @@
+console.log("Load app")
+console.log(initialData);
 var app = new Vue({
 	el: "#app",
+	delimiters: ['[[', ']]'],
 	data: {
-		initialData: {},
+		initialData: initialData,
 		hargaBarang: -1,
 		hargaBarangPreview: ""
 	},

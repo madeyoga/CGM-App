@@ -20,41 +20,44 @@
 		</div>
 
 		<!-- FORM -->
-		<form class="mb-5" action="" method="POST">
+		<form class="mb-5" action="/webclient/post_item/" method="POST">
+			{% csrf_token %}
 			<div class="form-group row">
 				<label for="nama_barang" class="col-sm-2 col-form-label">Nama Barang</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="nama_barang" placeholder="masukan nama barang...">
+					<input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="masukan nama barang...">
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="merek_barang" class="col-sm-2 col-form-label">Merek Barang</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="merek_barang" placeholder="masukan nama merek barang...">
+					<input type="text" class="form-control" id="merek_barang" name="merek_barang" placeholder="masukan nama merek barang...">
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="harga_barang_preview" class="col-sm-2 col-form-label">Harga Barang</label>
 				<div class="col-sm-10 input-group">
-					<input type="number" v-model="hargaBarang" v-on:keyup="processNumber()" min="50" class="form-control" id="harga_barang" placeholder="masukan harga barang...">
+					<input 
+						type="number" v-model="hargaBarang" v-on:change="processNumber()" min="50" class="form-control" 
+						id="harga_barang" name="harga_barang" placeholder="masukan harga barang...">
 					
 					<div class="input-group-prepend">
 						<div class="input-group-text">Rp.</div>
 					</div>
 
-					<input type="text" v-model="hargaBarangPreview" readonly>
+					<input type="text" name="harga_barang_preview" v-model="hargaBarangPreview" readonly>
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="part_nomer" class="col-sm-2 col-form-label">Part Nomer</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="part_nomer" placeholder="masukan part nomer barang...">
+					<input type="text" class="form-control" id="part_nomer" name="part_nomer" placeholder="masukan part nomer barang...">
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="jumlah_stock_barang" class="col-sm-2 col-form-label">Jumlah Stock</label>
 				<div class="col-sm-10">
-					<input type="number" class="form-control" id="jumlah_stock_barang" placeholder="masukan jumlah stock barang...">
+					<input type="number" class="form-control" id="jumlah_stock_barang" name="jumlah_stock_barang" min="0" placeholder="masukan jumlah stock barang...">
 				</div>
 			</div>
 			<div class="form-group row">
@@ -72,47 +75,19 @@
 	            <tr>
 	                <th>Name Barang</th>
 	                <th>Merek Barang</th>
-	                <th>Harga</th>
 	                <th>Part Nomer</th>
 	                <th>Jumlah Stok</th>
+	                <th>Harga</th>
 	            </tr>
 	        </thead>
 	        <tbody>
-	            <tr id="test">
-	                <td>Tiger Nixon</td>
-	                <td>System Architect</td>
-	                <td>Edinburgh</td>
-	                <td>61</td>
-	                <td>2011/04/25</td>
-	            </tr>
-	            <tr>
-	                <td>Garrett Winters</td>
-	                <td>Accountant</td>
-	                <td>Tokyo</td>
-	                <td>63</td>
-	                <td>2011/07/25</td>
-	            </tr>
-	            <tr>
-	                <td>Ashton Cox</td>
-	                <td>Junior Technical Author</td>
-	                <td>San Francisco</td>
-	                <td>66</td>
-	                <td>2009/01/12</td>
-	            </tr>
-	            <tr>
-	                <td>Cedric Kelly</td>
-	                <td>Senior Javascript Developer</td>
-	                <td>Edinburgh</td>
-	                <td>22</td>
-	                <td>2012/03/29</td>
-	            </tr>
-	            <tr>
-	                <td>Airi Satou</td>
-	                <td>Accountant</td>
-	                <td>Tokyo</td>
-	                <td>33</td>
-	                <td>2008/11/28</td>
-	            </tr>
+				<tr v-for="item in initialData" v-bind:key="item.id">
+					<td>[[ item.nama_barang ]]</td>
+					<td>[[ item.merek__nama_merek ]]</td>
+					<td>[[ item.part_nomor_barang ]]</td>
+					<td class="dt-body-right">[[ item.quantity ]]</td>
+					<td class="dt-body-right">[[ item.harga_preview ]]</td>
+				</tr>
 	        </tbody>
 	        <tfoot>
 	            <tr>
@@ -130,6 +105,11 @@
 {% endblock %}
 
 {% block scripts %}
+	{{ data|json_script:"initialData" }}
+	<script>
+		const initialData = JSON.parse(document.getElementById('initialData').textContent);
+		console.log(initialData);
+	</script>
 	<script src="{% static 'webclient/js/gudang_app.js' %}" type="text/javascript"></script>
 	<script src="{% static 'webclient/js/gudang_datatables.js' %}" type="text/javascript"></script>
 {% endblock %}
