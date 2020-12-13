@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse
@@ -14,7 +13,12 @@ def index(request):
 
 @require_http_methods(["GET", "POST"])
 def items(request):
+
     if request.method == 'POST':
         new_item = Barang.save_post_request(request.POST)
         return JsonResponse({"POST": "OK", "item": model_to_dict(new_item)})
-    return JsonResponse({"GET": "OK"})
+
+    item_list = Barang.objects.values('id', 'nama_barang', 'harga', 'harga_preview', 'quantity',
+                                      'part_nomor_barang', 'merek__nama_merek')
+
+    return JsonResponse(list(item_list), safe=False)

@@ -20,6 +20,24 @@ var app = new Vue({
 				rupiah += separator + ribuan.join('.');
 			}
 			this.hargaBarangPreview = rupiah;
+		},
+		refreshData: function() {
+			var button = document.getElementById("refresh-button");
+			
+			// Disable
+			button.disabled = true;
+
+			fetch("/api/items/")
+			.then((response) => response.json())
+			.then(function (data) {
+				console.log(data);
+				app.initialData = data;
+			}).catch(function (err) {
+				console.warn('Something went wrong.', err);
+			});
+
+			// Enable after 6 seconds.
+			setTimeout(() => {button.disabled = false;}, 6000);
 		}
 	}
 });
