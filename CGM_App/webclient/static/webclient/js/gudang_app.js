@@ -6,7 +6,8 @@ var app = new Vue({
 	data: {
 		initialData: initialData,
 		hargaBarang: null,
-		hargaBarangPreview: ""
+		hargaBarangPreview: "",
+		selectedData: null
 	},
 	methods: {
 		processNumber: function() {

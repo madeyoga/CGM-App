@@ -91,7 +91,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="item in initialData" v-bind:key="item.id">
+						<tr v-for="item in initialData" v-bind:key="item.id" v-bind:id="item.id">
 							<td>[[ item.nama_barang ]]</td>
 							<td>[[ item.merek__nama_merek ]]</td>
 							<td>[[ item.part_nomor_barang ]]</td>

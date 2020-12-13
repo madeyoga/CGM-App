@@ -11,9 +11,10 @@ $(document).ready(function() {
         }
     });
 
-    $('.dataTable').on('click', 'tbody td', function() {
-		//get textContent of the TD
-		console.log('TD cell textContent : ', this.textContent)
-		console.log(this.parentNode.id);
+    $('.dataTable').on('dblclick', 'tbody td', function() {
+        app.selectedData = app.initialData.find((item) => item.id == this.parentNode.id);
+        console.log(app.selectedData);
+
+        // Show modal
 	})
 });
