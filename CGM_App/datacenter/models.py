@@ -7,6 +7,15 @@ from datacenter.utils import fetchall_as_dict
 class Merek(models.Model):
     nama_merek = models.CharField(max_length=256)
 
+    @staticmethod
+    def try_get_brand(brand_name):
+        if not Merek.objects.filter(nama_merek=brand_name).exists():
+            brand = Merek.objects.create(nama_merek=brand_name)
+            brand.save()
+        else:
+            brand = Merek.objects.filter(nama_merek=brand_name).get()
+        return brand
+
     def __str__(self):
         return "{}".format(self.nama_merek)
 
@@ -79,6 +88,38 @@ class Barang(models.Model):
         new_item.save()
 
         return new_item
+
+    @staticmethod
+    def edit_item(edit_form):
+        item_id = int(edit_form.cleaned_data['id_barang'])
+
+        if Barang.objects.filter(id=item_id).exists():
+            target_item = Barang.objects.filter(id=item_id).get()
+            item_name = edit_form.cleaned_data['nama_barang']
+            item_brand = edit_form.cleaned_data['merek_barang']
+            item_price = edit_form.cleaned_data['harga_barang']
+            item_price_preview = "Rp. " + edit_form.cleaned_data['harga_barang_preview']
+            item_part_number = edit_form.cleaned_data['part_nomer']
+            item_stock = edit_form.cleaned_data['jumlah_stock_barang']
+
+            item_brand = Merek.try_get_brand(item_brand)
+
+            target_item.merek_barang = item_brand
+            target_item.nama_barang = item_name
+            target_item.harga = item_price
+            target_item.harga_preview = item_price_preview
+            target_item.part_nomor_barang = item_part_number
+            target_item.quantity = item_stock
+
+            target_item.save()
+
+            return target_item
+
+        return None
+
+    @staticmethod
+    def delete_item(item_id):
+        Barang.objects.get(id=item_id).delete()
 
     def __str__(self):
         return "{}-{}-{}".format(self.merek, self.nama_barang, self.harga)
