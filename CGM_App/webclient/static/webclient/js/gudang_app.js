@@ -39,6 +39,49 @@ var app = new Vue({
 
 			// Enable after 6 seconds.
 			setTimeout(() => {button.disabled = false;}, 6000);
-		}
+		},
 	}
 });
+
+var editApp = new Vue({
+	el: "#edit_app",
+	delimiters: ['[[', ']]'],
+	data: {
+		hargaBarang: null,
+		hargaBarangPreview: "",
+		idBarang: null,
+		namaBarang: null,
+		namaMerek: null,
+		partNomerBarang: null,
+		quantity: null,
+		deleteUrl: null
+	},
+	methods: {
+		processNumber: function() {
+			var number_string = this.hargaBarang.toString();
+			var	sisa = number_string.length % 3;
+			var	rupiah = number_string.substr(0, sisa);
+			var	ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+			if (ribuan) {
+				separator = sisa ? '.' : '';
+				rupiah += separator + ribuan.join('.');
+			}
+			this.hargaBarangPreview = rupiah;
+		},
+		showModal: function(selectedData) {
+			this.idBarang = selectedData.id;
+			this.namaBarang = selectedData.nama_barang;
+			this.namaMerek = selectedData.merek__nama_merek;
+			this.hargaBarang = selectedData.harga;
+			this.hargaBarangPreview = selectedData.harga_preview;
+			this.partNomerBarang = selectedData.part_nomor_barang;
+			this.quantity = selectedData.quantity;
+			this.deleteUrl = "/webclient/delete_item/" + selectedData.id;
+			$('#edit_modal').modal('show');
+		},
+		closeModal: function() {
+			$("#edit_modal").modal("hide");
+		},
+	}
+})

@@ -16,5 +16,6 @@ $(document).ready(function() {
         console.log(app.selectedData);
 
         // Show modal
-	})
+        editApp.showModal(app.selectedData);
+	});
 });
