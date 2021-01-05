@@ -68,7 +68,7 @@ class Barang(models.Model):
         item_name = post.get('nama_barang', '')
         item_brand = post.get('merek_barang', '')
         item_price = post.get('harga_barang', 50)
-        item_price_preview = post.get('harga_barang_preview', f"Rp. {item_price}")
+        item_price_preview = post.get('harga_barang_preview', item_price)
         item_part_number = post.get('part_nomer', '')
         item_stock = post.get('jumlah_stock_barang', 0)
 
