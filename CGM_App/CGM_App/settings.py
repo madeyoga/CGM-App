@@ -26,7 +26,12 @@ SECRET_KEY = os.environ["CGM_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '0.0.0.0',
+    'localhost',
+    '127.0.0.1',
+    os.environ['SERVER_PUBLIC_IPV4']
+]
 
 
 # Application definition
