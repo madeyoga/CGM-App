@@ -42,7 +42,7 @@ class Barang(models.Model):
         item_name = post_form.cleaned_data['nama_barang']
         item_brand = post_form.cleaned_data['merek_barang']
         item_price = post_form.cleaned_data['harga_barang']
-        item_price_preview = "Rp. " + post_form.cleaned_data['harga_barang_preview']
+        item_price_preview = post_form.cleaned_data['harga_barang_preview']
         item_part_number = post_form.cleaned_data['part_nomer']
         item_stock = post_form.cleaned_data['jumlah_stock_barang']
 
@@ -68,7 +68,7 @@ class Barang(models.Model):
         item_name = post.get('nama_barang', '')
         item_brand = post.get('merek_barang', '')
         item_price = post.get('harga_barang', 50)
-        item_price_preview = "Rp. " + post.get('harga_barang_preview', f"Rp. {item_price}")
+        item_price_preview = post.get('harga_barang_preview', f"Rp. {item_price}")
         item_part_number = post.get('part_nomer', '')
         item_stock = post.get('jumlah_stock_barang', 0)
 
@@ -98,7 +98,7 @@ class Barang(models.Model):
             item_name = edit_form.cleaned_data['nama_barang']
             item_brand = edit_form.cleaned_data['merek_barang']
             item_price = edit_form.cleaned_data['harga_barang']
-            item_price_preview = "Rp. " + edit_form.cleaned_data['harga_barang_preview']
+            item_price_preview = edit_form.cleaned_data['harga_barang_preview']
             item_part_number = edit_form.cleaned_data['part_nomer']
             item_stock = edit_form.cleaned_data['jumlah_stock_barang']
 
