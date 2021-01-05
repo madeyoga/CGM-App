@@ -2,7 +2,7 @@ $(document).ready(function() {
     var table = $('#table-items').DataTable();
 
     $('#table-items tbody').on( 'click', 'tr', function () {
-        if ( $(this).hasClass('selected') ) {
+        if ( $(this).hasClass('selected')) {
             $(this).removeClass('selected');
         }
         else {
@@ -11,11 +11,11 @@ $(document).ready(function() {
         }
     });
 
-    $('.dataTable').on('dblclick', 'tbody td', function() {
+    $('.dataTable').on('doubletap', 'tbody td', function(e) { 
         app.selectedData = app.initialData.find((item) => item.id == this.parentNode.id);
         console.log(app.selectedData);
 
         // Show modal
         editApp.showModal(app.selectedData);
-	});
+    });
 });
