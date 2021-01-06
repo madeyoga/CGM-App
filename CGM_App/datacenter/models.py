@@ -20,11 +20,19 @@ class Merek(models.Model):
         return "{}".format(self.nama_merek)
 
 
+class ItemGroup(models.Model):
+    group_name = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.group_name
+
+
 class Barang(models.Model):
     merek = models.ForeignKey(Merek, on_delete=models.CASCADE)
+    kelompok = models.ForeignKey(ItemGroup, on_delete=models.RESTRICT)
     nama_barang = models.CharField(max_length=256)
     harga = models.BigIntegerField()
-    harga_preview = models.CharField(max_length=16, default="Rp. " + str(harga))
+    harga_preview = models.CharField(max_length=16, default="Rp. -")
     part_nomor_barang = models.CharField(max_length=128)
     quantity = models.IntegerField()
 

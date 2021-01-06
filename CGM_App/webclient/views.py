@@ -19,7 +19,7 @@ def index(request):
 
 
 def order(request):
-    return HttpResponse("Order")
+    return render(request, 'webclient/webclient_order.html')
 
 
 def penjualan(request):
