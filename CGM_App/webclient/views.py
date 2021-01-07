@@ -19,15 +19,16 @@ def index(request):
 
 
 def order(request):
-    return render(request, 'webclient/webclient_order.html')
+    orders = Order.objects.all().values()
+    return render(request, 'webclient/webclient_order.html', {'data': list(orders)})
 
 
 def penjualan(request):
-    return HttpResponse("Order")
+    return HttpResponse("Penjualan")
 
 
 def pembeli(request):
-    return HttpResponse("Order")
+    return HttpResponse("Pembeli")
 
 
 @require_http_methods(["POST"])
