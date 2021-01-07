@@ -1,9 +1,11 @@
 from django.db import models
 from django.db import connection
 from datacenter.utils import fetchall_as_dict
-
+from webclient.fields import NameField
 
 # Create your models here.
+
+
 class Merek(models.Model):
     nama_merek = models.CharField(max_length=256)
 
@@ -29,8 +31,8 @@ class ItemGroup(models.Model):
 
 class Barang(models.Model):
     merek = models.ForeignKey(Merek, on_delete=models.CASCADE)
-    kelompok = models.ForeignKey(ItemGroup, on_delete=models.RESTRICT)
-    nama_barang = models.CharField(max_length=256)
+    # kelompok = models.ForeignKey(ItemGroup, on_delete=models.CASCADE)
+    nama_barang = NameField(max_length=256, blank=True)
     harga = models.BigIntegerField()
     harga_preview = models.CharField(max_length=16, default="Rp. -")
     part_nomor_barang = models.CharField(max_length=128)
@@ -134,7 +136,7 @@ class Barang(models.Model):
 
 
 class Pembeli(models.Model):
-    nama_pembeli = models.CharField(max_length=256)
+    nama_pembeli = NameField(max_length=256)
 
     def __str__(self):
         return "{}".format(self.nama_pembeli)
@@ -162,7 +164,7 @@ class DetailPenjualan(models.Model):
 
 
 class Order(models.Model):
-    barang = models.ForeignKey(Barang, on_delete=models.CASCADE)
+    nama_barang = NameField(max_length=256, default="", blank=True)
     tanggal_order = models.DateTimeField(auto_now=True)
     note = models.TextField()
     barang_datang = models.BooleanField()
@@ -170,4 +172,4 @@ class Order(models.Model):
     batal = models.BooleanField()
 
     def __str__(self):
-        return "{}-{}-{}".format(self.tanggal_order, self.barang, self.batal)
+        return "{}-{}".format(self.tanggal_order, self.nama_barang)
