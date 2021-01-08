@@ -18,3 +18,8 @@ class EditItemForm(forms.Form):
     harga_barang_preview = forms.CharField(label='harga_barang_preview')
     part_nomer = forms.CharField(label='part_nomer')
     jumlah_stock_barang = forms.IntegerField(label='jumlah_stock_barang', min_value=0)
+
+
+class PostNewOrderForm(forms.Form):
+    id_order = forms.CharField(label='id_order')
+    nama_barang = forms.CharField(label='nama_barang')

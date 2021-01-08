@@ -63,3 +63,14 @@ def delete_item(request, item_id):
     else:
         messages.error(request, "Only super user can delete data.")
     return HttpResponseRedirect("/webclient/")
+
+
+@require_http_methods(["POST"])
+def post_order(request):
+    post_form = PostNewItemForm(request.POST)
+    if post_form.is_valid():
+        Barang.save_form(post_form)
+        messages.success(request, "Save data success!")
+    else:
+        messages.error(request, "Please make sure to fill all the fields before submit form")
+    return HttpResponseRedirect("/webclient/")

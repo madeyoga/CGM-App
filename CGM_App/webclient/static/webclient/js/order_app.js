@@ -2,7 +2,8 @@ var app = new Vue({
     el: "#app",
 	delimiters: ['[[', ']]'],
     data: {
-        ongoingOrders: initialData
+        ongoingOrders: initialData,
+        selectedData: null
     },
     methods: {
         addNewOrderField: function() {
