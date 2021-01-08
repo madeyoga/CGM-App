@@ -16,7 +16,7 @@
 			<div class="card-body">
 				<div class="row mt-4 mb-4">
 					<h1 class="col-md-6">Order Barang</h1>
-					<button id="add-new-button" class="col-md-3 btn btn-primary btn-sm" v-on:click="addNewOrderField">Tambah Order</button>
+					<button id="add-new-button" class="col-md-3 btn btn-primary btn-sm" onclick="$('#post_modal').modal('show');">Tambah Order</button>
 				</div>
 
 				<!-- TABLE -->
@@ -28,18 +28,22 @@
 								<th>Tanggal Order</th>
 								<th>Parts</th>
 								<th>Note</th>
+								<th>Jumlah</th>
+								<th>Harga Satuan</th>
 								<th>Tanggal Datang</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr v-for="item in ongoingOrders" v-bind:key="item.id" v-bind:id="item.id">
-								<template v-if="Object.keys(item).length > 0">
-									<td>[[ item.id ]]</td> 
-									<td>[[ item.tanggal_order ]]</td> 
-									<td>[[ item.nama_barang ]]</td>
-									<td>[[ item.note ]]</td>
-									<td>[[ item.tanggal_datang ]]</td>
-								</template>
+								<!-- <template v-if="Object.keys(item).length > 0"> -->
+								<td>[[ item.id ]]</td>
+								<td>[[ item.tanggal_order_preview ]]</td> 
+								<td>[[ item.nama_barang ]]</td>
+								<td>[[ item.note ]]</td>
+								<td>[[ item.jumlah ]]</td>
+								<td>[[ item.harga ]]</td>
+								<td>[[ item.tanggal_datang ]]</td>
+								<!-- </template> -->
 
 								<!-- <template v-else>
 									<td><input type="text" class="form-control" readonly value="-"></td>
@@ -59,6 +63,8 @@
 								<th>Tanggal Order</th>
 								<th>Parts</th>
 								<th>Note</th>
+								<th>Jumlah</th>
+								<th>Harga Satuan</th>
 								<th>Tanggal Datang</th>
 							</tr>
 						</tfoot>
@@ -68,6 +74,128 @@
 			</div>
 		</div>
 	</div>
+	<!-- APP END -->
+
+	<!-- POST New Modal -->
+	<div class="modal fade" id="post_modal" tabindex="-1" role="dialog" aria-labelledby="post_modal_title" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<!-- FORM -->
+			<form action="/webclient/post_order/" method="POST">
+				{% csrf_token %}
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="post_modal_title">Form Order</h5>
+						<button type="button" v-on:click="closeModal" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group row">
+							<label for="id_barang" class="col-sm-2 col-form-label">ID Order</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="id_order" name="id_order" value="-1" readonly>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="nama_barang" class="col-sm-2 col-form-label">Tanggal Order</label>
+							<div class="col-sm-10">
+								<input id="tanggal_order" name="tanggal_order" type="datetime-local" class="form-control">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="nama_barang" class="col-sm-2 col-form-label">Nama Barang</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="nama_barang" name="nama_barang" placeholder="masukan nama barang...">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="jumlah_stock_barang" class="col-sm-2 col-form-label">Jumlah</label>
+							<div class="col-sm-10">
+								<input type="number" class="form-control" id="jumlah_barang" name="jumlah_barang" min="0" placeholder="masukan jumlah barang yang ingin di order...">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="harga_barang_preview" class="col-sm-2 col-form-label">Harga Barang</label>
+							<div class="col-sm-10 input-group">
+								<input 
+									type="number" min="50" class="form-control" 
+									id="harga_barang" name="harga_barang" placeholder="masukan harga barang satuan...">
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
+					</div>
+				</div>
+			</form>
+			<!-- FORM END -->
+		</div>
+	</div>
+	<!-- POST New Modal END -->
+
+	<!-- EDIT APP -->
+	<div id="edit_app">
+		<!-- EDIT Modal -->
+		<div class="modal fade" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="edit_modal_title" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<!-- FORM -->
+				<form action="/webclient/edit_order/" method="POST">
+					{% csrf_token %}
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="edit_modal_title">Form Order</h5>
+							<button type="button" v-on:click="closeModal" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div class="form-group row">
+								<label for="id_barang" class="col-sm-2 col-form-label">ID Order</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" v-model="idOrder" id="id_order" name="id_order" value="-1" readonly>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="nama_barang" class="col-sm-2 col-form-label">Tanggal Order</label>
+								<div class="col-sm-10">
+									<input id="tanggal_order" name="tanggal_order" type="datetime-local" v-model="tanggalOrder" class="form-control">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="nama_barang" class="col-sm-2 col-form-label">Nama Barang</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" v-model="namaBarang" id="nama_barang" name="nama_barang" placeholder="masukan nama barang...">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="jumlah_stock_barang" class="col-sm-2 col-form-label">Jumlah</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" v-model="jumlahBarang" id="jumlah_barang" name="jumlah_barang" min="0" placeholder="masukan jumlah barang yang ingin di order...">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="harga_barang_preview" class="col-sm-2 col-form-label">Harga Barang</label>
+								<div class="col-sm-10 input-group">
+									<input 
+										type="number" v-model="hargaBarang" min="50" class="form-control" 
+										id="harga_barang" name="harga_barang" placeholder="masukan harga barang satuan...">
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" v-on:click="closeModal" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							<a type="button" v-bind:href="deleteUrl" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-trash"></i> Delete</a>
+							<button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save Changes</button>
+						</div>
+					</div>
+				</form>
+				<!-- FORM END -->
+			</div>
+		</div>
+		<!-- EDIT Modal END -->
+	</div>
+	<!-- EDIT APP END -->
 {% endblock %}
 
 {% block scripts %}
@@ -77,8 +205,8 @@
 		var initialData = JSON.parse(document.getElementById('initialData').textContent);
 		console.log(initialData);
 		for (orderData of initialData) {
-			orderData.tanggal_order = moment(orderData.tanggal_order).format('DD-MM-YYYY HH:mm');
-			console.log(orderData.tanggal_order);
+			orderData['tanggal_order_preview'] = moment(orderData.tanggal_order).format('DD-MM-YYYY HH:mm');
+			console.log(orderData.tanggal_order_preview);
 		}
 	</script>
 	<script src="{% static 'webclient/js/order_app.js' %}" type="text/javascript"></script>
