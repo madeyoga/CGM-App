@@ -167,6 +167,8 @@ class Order(models.Model):
     nama_barang = NameField(max_length=256, default="", blank=True)
     tanggal_order = models.DateTimeField(auto_now=True)
     note = models.TextField()
+    jumlah = models.IntegerField(default=1)
+    harga = models.BigIntegerField(default=1)
     barang_datang = models.BooleanField()
     tanggal_datang = models.DateTimeField(null=True, blank=True, default="")
     batal = models.BooleanField()
