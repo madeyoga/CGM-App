@@ -12,7 +12,7 @@ $(document).ready(function() {
     });
 
     $('.dataTable').on('doubletap', 'tbody td', function(e) { 
-        app.selectedData = app.initialData.find((item) => item.id == this.parentNode.id);
+        app.selectedData = app.ongoingOrders.find((item) => item.id == this.parentNode.id);
         console.log(app.selectedData);
 
         // Show modal

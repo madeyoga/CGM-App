@@ -20,3 +20,29 @@ var app = new Vue({
         }
     }
 });
+
+var editApp = new Vue({
+    el: "#edit_app",
+    delimiters: ['[[', ']]'],
+    data: {
+        idOrder: null,
+        tanggalOrder: new Date(),
+		namaBarang: null,
+        hargaBarang: null,
+		jumlahBarang: null,
+		deleteUrl: null
+    },
+    methods: {
+        showModal: function(selectedData) {
+            this.idOrder = selectedData.id;
+            this.tanggalOrder = moment(selectedData.tanggal_order).format('YYYY-MM-DD\THH:mm');
+            this.namaBarang = selectedData.nama_barang;
+            this.jumlahBarang = selectedData.jumlah;
+            this.hargaBarang = selectedData.harga;
+            $('#edit_modal').modal('show');
+        },
+        closeModal: function() {
+			$("#edit_modal").modal("hide");
+		},
+    }
+})
