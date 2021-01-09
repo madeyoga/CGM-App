@@ -16,5 +16,7 @@ urlpatterns = [
     path('delete_item/<int:item_id>', views.delete_item, name='webclient_delete_item'),
 
     # Order Routes
-    path('post_order/', views.post_order, name="webclient_post_order")
+    path('post_order/', views.post_order, name="webclient_post_order"),
+    path('edit_order/', views.edit_order, name="webclient_post_order"),
+    path('delete_order/<int:order_id>', views.delete_order, name='webclient_delete_order')
 ]
