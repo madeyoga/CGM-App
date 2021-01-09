@@ -9,15 +9,6 @@ var app = new Vue({
         addNewOrderField: function() {
             this.ongoingOrders.push({});
         },
-        onClickSaveButton: function(buttonElement) {
-            var dataIndex = buttonElement.parentNode.parentNode.rowIndex - 1;
-            console.log(dataIndex);
-        },
-        onClickRemoveButton: function(buttonElement) {
-            var dataIndex = buttonElement.parentNode.parentNode.rowIndex - 1;
-            this.ongoingOrders.splice(dataIndex, 1);
-            console.log(this.ongoingOrders);
-        }
     }
 });
 
@@ -29,7 +20,9 @@ var editApp = new Vue({
         tanggalOrder: new Date(),
 		namaBarang: null,
         hargaBarang: null,
-		jumlahBarang: null,
+        jumlahBarang: null,
+        note: null,
+        tanggalDatang: null,
 		deleteUrl: null
     },
     methods: {
@@ -39,6 +32,17 @@ var editApp = new Vue({
             this.namaBarang = selectedData.nama_barang;
             this.jumlahBarang = selectedData.jumlah;
             this.hargaBarang = selectedData.harga;
+            this.note = selectedData.note;
+
+            var tempCompleteDate = selectedData.tanggal_datang;
+            if (tempCompleteDate == null) {
+                this.tanggalDatang = "";
+            }
+            else {
+                this.tanggalDatang = moment(tempCompleteDate).format('YYYY-MM-DD\THH:mm');
+            }
+
+            this.deleteUrl = "/webclient/delete_order/" + selectedData.id;
             $('#edit_modal').modal('show');
         },
         closeModal: function() {

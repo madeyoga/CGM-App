@@ -12,6 +12,19 @@
 
 {% block content %}
 	<div id="app" class="container">
+		{% if messages %}
+			{% for message in messages %}
+				{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+				<div class="alert alert-danger text-center mt-3">
+					<p>{{ message }}</p> 
+				</div>
+				{% else %}
+				<div class="alert alert-success text-center mt-3">
+					<p> {{ message }}</p>
+				</div>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
 		<div class="shadow p-3 card mb-5 mt-3">
 			<div class="card-body">
 				<div class="row mt-4 mb-4">
@@ -35,26 +48,13 @@
 						</thead>
 						<tbody>
 							<tr v-for="item in ongoingOrders" v-bind:key="item.id" v-bind:id="item.id">
-								<!-- <template v-if="Object.keys(item).length > 0"> -->
 								<td>[[ item.id ]]</td>
 								<td>[[ item.tanggal_order_preview ]]</td> 
 								<td>[[ item.nama_barang ]]</td>
 								<td>[[ item.note ]]</td>
 								<td>[[ item.jumlah ]]</td>
 								<td>[[ item.harga ]]</td>
-								<td>[[ item.tanggal_datang ]]</td>
-								<!-- </template> -->
-
-								<!-- <template v-else>
-									<td><input type="text" class="form-control" readonly value="-"></td>
-									<td><input name="tanggal_order" type="datetime-local" class="form-control"></td>
-									<td><input name="nama_barang" type="text" class="form-control"></td>
-									<td><input name="note" type="text" class="form-control"></td>
-									<td><input name="tanggal_datang" type="text" class="form-control"></td>
-
-									<td><button class="btn btn-danger" onclick="app.onClickRemoveButton(this)"><i class="fa fa-trash"></i></button></td>
-									<td><button class="btn btn-primary" onclick="app.onClickSaveButton(this)"><i class="fa fa-floppy-o"></i></button></td>
-								</template> -->
+								<td>[[ item.tanggal_datang_preview ]]</td>
 							</tr>
 						</tbody>
 						<tfoot>
@@ -85,7 +85,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="post_modal_title">Form Order</h5>
-						<button type="button" v-on:click="closeModal" class="close" data-dismiss="modal" aria-label="Close">
+						<button type="button" onclick="$('#post_modal').modal('hide');" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
@@ -111,20 +111,26 @@
 						<div class="form-group row">
 							<label for="jumlah_stock_barang" class="col-sm-2 col-form-label">Jumlah</label>
 							<div class="col-sm-10">
-								<input type="number" class="form-control" id="jumlah_barang" name="jumlah_barang" min="0" placeholder="masukan jumlah barang yang ingin di order...">
+								<input type="number" class="form-control" id="jumlah_barang" name="jumlah_barang" min="1" value="1" placeholder="masukan jumlah barang yang ingin di order...">
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="harga_barang_preview" class="col-sm-2 col-form-label">Harga Barang</label>
+							<label for="harga_barang_preview" class="col-sm-2 col-form-label">Harga Satuan</label>
 							<div class="col-sm-10 input-group">
 								<input 
-									type="number" min="50" class="form-control" 
+									type="number" min="50" class="form-control" value="50"
 									id="harga_barang" name="harga_barang" placeholder="masukan harga barang satuan...">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="harga_barang_preview" class="col-sm-2 col-form-label">Note</label>
+							<div class="col-sm-10 input-group">
+								<textarea class="form-control" name="note" placeholder="masukan catatan..."></textarea>
 							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" onclick="$('#post_modal').modal('hide');" class="btn btn-secondary" data-dismiss="modal">Close</button>
 						<button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
 					</div>
 				</div>
@@ -171,15 +177,27 @@
 							<div class="form-group row">
 								<label for="jumlah_stock_barang" class="col-sm-2 col-form-label">Jumlah</label>
 								<div class="col-sm-10">
-									<input type="number" class="form-control" v-model="jumlahBarang" id="jumlah_barang" name="jumlah_barang" min="0" placeholder="masukan jumlah barang yang ingin di order...">
+									<input type="number" class="form-control" v-model="jumlahBarang" id="jumlah_barang" name="jumlah_barang" min="1" placeholder="masukan jumlah barang yang ingin di order...">
 								</div>
 							</div>
 							<div class="form-group row">
-								<label for="harga_barang_preview" class="col-sm-2 col-form-label">Harga Barang</label>
+								<label for="harga_barang" class="col-sm-2 col-form-label">Harga Satuan</label>
 								<div class="col-sm-10 input-group">
 									<input 
-										type="number" v-model="hargaBarang" min="50" class="form-control" 
+										type="number" v-model="hargaBarang" min="50" value="50" class="form-control" 
 										id="harga_barang" name="harga_barang" placeholder="masukan harga barang satuan...">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="note" class="col-sm-2 col-form-label">Note</label>
+								<div class="col-sm-10 input-group">
+									<textarea class="form-control" v-model="note" id="note" name="note" placeholder="masukan catatan..."></textarea>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="tanggal_datang" class="col-sm-2 col-form-label">Tanggal Datang</label>
+								<div class="col-sm-10 input-group">
+									<input id="tanggal_datang" name="tanggal_datang" type="datetime-local" v-model="tanggalDatang" class="form-control">
 								</div>
 							</div>
 						</div>
@@ -206,7 +224,13 @@
 		console.log(initialData);
 		for (orderData of initialData) {
 			orderData['tanggal_order_preview'] = moment(orderData.tanggal_order).format('DD-MM-YYYY HH:mm');
-			console.log(orderData.tanggal_order_preview);
+			if (orderData.tanggal_datang != null) {
+				orderData['tanggal_datang_preview'] = moment(orderData.tanggal_datang).format('DD-MM-YYYY HH:mm');
+			}
+			else {
+				orderData['tanggal_datang_preview'] = "";
+			}
+			// console.log(orderData.tanggal_order_preview);
 		}
 	</script>
 	<script src="{% static 'webclient/js/order_app.js' %}" type="text/javascript"></script>
