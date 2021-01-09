@@ -1,5 +1,7 @@
 from django.db import models
 from django.db import connection
+from django.utils import timezone
+
 from datacenter.utils import fetchall_as_dict
 from webclient.fields import NameField
 
@@ -127,10 +129,6 @@ class Barang(models.Model):
 
         return None
 
-    @staticmethod
-    def delete_item(item_id):
-        Barang.objects.get(id=item_id).delete()
-
     def __str__(self):
         return "{}-{}-{}".format(self.merek, self.nama_barang, self.harga)
 
@@ -165,13 +163,60 @@ class DetailPenjualan(models.Model):
 
 class Order(models.Model):
     nama_barang = NameField(max_length=256, default="", blank=True)
-    tanggal_order = models.DateTimeField(auto_now=True)
+    tanggal_order = models.DateTimeField(default=timezone.now)
     note = models.TextField()
     jumlah = models.IntegerField(default=1)
     harga = models.BigIntegerField(default=1)
     barang_datang = models.BooleanField()
     tanggal_datang = models.DateTimeField(null=True, blank=True, default="")
     batal = models.BooleanField()
+
+    @staticmethod
+    def save_form(post_form):
+        order_item_name = post_form.cleaned_data['nama_barang']
+        order_date = post_form.cleaned_data['tanggal_order']
+        note = post_form.cleaned_data['note']
+        quantity = post_form.cleaned_data['jumlah_barang']
+        each_price = post_form.cleaned_data['harga_barang']
+
+        new_order = Order.objects.create(nama_barang=order_item_name,
+                                         tanggal_order=order_date,
+                                         note=note,
+                                         jumlah=quantity,
+                                         harga=each_price,
+                                         barang_datang=False,
+                                         batal=False,
+                                         tanggal_datang=None)
+        new_order.save()
+
+        return new_order
+
+    @staticmethod
+    def edit_form(edit_form):
+        order_id = edit_form.cleaned_data['id_order']
+
+        if Order.objects.filter(id=order_id).exists():
+            target_order_data = Order.objects.filter(id=order_id).get()
+
+            order_item_name = edit_form.cleaned_data['nama_barang']
+            order_date = edit_form.cleaned_data['tanggal_order']
+            note = edit_form.cleaned_data['note']
+            quantity = edit_form.cleaned_data['jumlah_barang']
+            each_price = edit_form.cleaned_data['harga_barang']
+            complete_date = edit_form.cleaned_data['tanggal_datang']
+
+            target_order_data.nama_barang = order_item_name
+            target_order_data.tanggal_order = order_date
+            target_order_data.note = note
+            target_order_data.jumlah = quantity
+            target_order_data.harga = each_price
+            target_order_data.tanggal_datang = complete_date
+
+            target_order_data.save()
+
+            return target_order_data
+
+        return None
 
     def __str__(self):
         return "{}-{}".format(self.tanggal_order, self.nama_barang)
