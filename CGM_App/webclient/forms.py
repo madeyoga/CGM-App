@@ -22,4 +22,18 @@ class EditItemForm(forms.Form):
 
 class PostNewOrderForm(forms.Form):
     id_order = forms.CharField(label='id_order')
+    tanggal_order = forms.DateTimeField(label='tanggal_order')
     nama_barang = forms.CharField(label='nama_barang')
+    jumlah_barang = forms.IntegerField(label='jumlah_barang')
+    harga_barang = forms.IntegerField(label='harga_barang')
+    note = forms.CharField(label='note', required=False)
+
+
+class EditOrderForm(forms.Form):
+    id_order = forms.CharField(label='id_order')
+    tanggal_order = forms.DateTimeField(label='tanggal_order')
+    nama_barang = forms.CharField(label='nama_barang')
+    jumlah_barang = forms.IntegerField(label='jumlah_barang')
+    harga_barang = forms.IntegerField(label='harga_barang')
+    note = forms.CharField(label='note')
+    tanggal_datang = forms.DateTimeField(label='tanggal_datang', required=False)
