@@ -28,8 +28,9 @@
 		<div class="shadow p-3 card mb-5 mt-3">
 			<div class="card-body">
 				<div class="row mt-4 mb-4">
-					<h1 class="col-md-6">Order Barang</h1>
+					<h1 class="col-md-9">Orderan</h1>
 					<button id="add-new-button" class="col-md-3 btn btn-primary btn-sm" onclick="$('#post_modal').modal('show');">Tambah Order</button>
+					<!-- <button id="add-new-button" class="col-md-3 btn btn-primary btn-sm" onclick="$('#post_modal').modal('show');">Sejarah Order</button> -->
 				</div>
 
 				<!-- TABLE -->
@@ -52,8 +53,8 @@
 								<td>[[ item.tanggal_order_preview ]]</td> 
 								<td>[[ item.nama_barang ]]</td>
 								<td>[[ item.note ]]</td>
-								<td>[[ item.jumlah ]]</td>
-								<td>[[ item.harga ]]</td>
+								<td class="dt-body-right">[[ item.jumlah ]]</td>
+								<td class="dt-body-right">[[ item.harga ]]</td>
 								<td>[[ item.tanggal_datang_preview ]]</td>
 							</tr>
 						</tbody>

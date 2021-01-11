@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.index, name='webclient_index'),
     path('gudang/', views.index, name='webclient_gudang'),
     path('order/', views.order, name='webclient_order'),
+    path('order_history/', views.order_history, name='webclient_order_history'),
     path('pembeli/', views.pembeli, name='webclient_pembeli'),
     path('penjualan/', views.penjualan, name='webclient_penjualan'),
 

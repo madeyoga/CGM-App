@@ -1,11 +1,9 @@
-from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from .forms import PostNewItemForm, EditItemForm, PostNewOrderForm, EditOrderForm
 from datacenter.models import *
-from django.core import serializers
 
 
 # Create your views here.
@@ -19,8 +17,15 @@ def index(request):
 
 
 def order(request):
-    orders = Order.objects.all().values()
-    return render(request, 'webclient/webclient_order.html', {'data': list(orders)})
+    orders = Order.objects.filter(tanggal_datang=None).values()
+    return render(request,
+                  'webclient/webclient_order.html',
+                  {'data': list(orders)})
+
+
+def order_history(request):
+    order_histories = Order.objects.all().values()
+    return render(request, 'webclient/webclient_order_history.html', {'data': list(order_histories)})
 
 
 def penjualan(request):
