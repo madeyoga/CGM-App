@@ -108,3 +108,11 @@ def delete_order(request, order_id):
     else:
         messages.error(request, "Only super user can delete data.")
     return HttpResponseRedirect("/webclient/order/")
+
+
+# Forms for Transaction
+
+
+def transaction_history(request):
+    sells = Penjualan.objects.all().values()
+    return render(request, 'webclient/transaction_history.html', {'data': list(sells)})
