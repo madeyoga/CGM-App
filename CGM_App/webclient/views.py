@@ -10,9 +10,6 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 @login_required(login_url='/login/')
 def index(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect("/login/")
-
     items = Barang.objects.all().values('id', 'nama_barang', 'harga', 'harga_preview', 'quantity',
                                         'part_nomor_barang', 'merek__nama_merek')
     return render(request,
