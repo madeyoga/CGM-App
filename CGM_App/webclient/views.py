@@ -4,11 +4,15 @@ from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from .forms import PostNewItemForm, EditItemForm, PostNewOrderForm, EditOrderForm
 from datacenter.models import *
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+@login_required(login_url='/login/')
 def index(request):
-    # edit_form = EditItemForm(request.POST or None)
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect("/login/")
+
     items = Barang.objects.all().values('id', 'nama_barang', 'harga', 'harga_preview', 'quantity',
                                         'part_nomor_barang', 'merek__nama_merek')
     return render(request,
@@ -16,6 +20,7 @@ def index(request):
                   {"Status": "OK", "data": list(items)})
 
 
+@login_required(login_url='/login/')
 def order(request):
     orders = Order.objects.filter(tanggal_datang=None).values()
     return render(request,
@@ -23,15 +28,18 @@ def order(request):
                   {'data': list(orders)})
 
 
+@login_required(login_url='/login/')
 def order_history(request):
     order_histories = Order.objects.all().values()
     return render(request, 'webclient/webclient_order_history.html', {'data': list(order_histories)})
 
 
+@login_required(login_url='/login/')
 def penjualan(request):
     return HttpResponse("Penjualan")
 
 
+@login_required(login_url='/login/')
 def pembeli(request):
     return HttpResponse("Pembeli")
 
