@@ -22,5 +22,6 @@ urlpatterns = [
     path('', include('webclient.urls')),
     path('datacenter/', include('datacenter.urls')),
     path('webclient/', include('webclient.urls')),
-    path('api/', include('restapi.urls'))
+    path('api/', include('restapi.urls')),
+    path('login/', include('authentication.urls'))
 ]
