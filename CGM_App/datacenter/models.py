@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from datacenter.utils import fetchall_as_dict
 from webclient.fields import NameField
+import json
 
 # Create your models here.
 
@@ -146,6 +147,43 @@ class Penjualan(models.Model):
     tanggal = models.DateTimeField(auto_now=True)
     harga_total = models.BigIntegerField()
 
+    @staticmethod
+    def save_form(post_form):
+        list_of_items = json.loads(post_form.cleaned_data["json_list_of_items"])
+        buyer_name = post_form.cleaned_data["customer"]
+        buy_datetime = post_form.cleaned_data["datetime"]
+
+        # Check if Pembeli is not exists yet, create new
+        if Pembeli.objects.filter(nama_pembeli=buyer_name).exists():
+            buyer = Pembeli.objects.filter(nama_pembeli=buyer_name).get()
+        else:
+            buyer = Pembeli.objects.create(nama_pembeli=buyer_name)
+            buyer.save()
+
+        transaction_data = Penjualan.objects.create(pembeli=buyer, tanggal=buy_datetime, harga_total=0)
+
+        # Process Items
+        total_price = 0
+        for item in list_of_items:
+            total_price += int(item['harga'])
+
+            item_name = item['barang'].upper()
+            if Barang.objects.filter(nama_barang=item_name).exists():
+                barang = Barang.objects.filter(nama_barang=item_name).get()
+            else:
+                barang = Barang.objects.create(
+                    nama_barang=item_name, 
+                    merek=Merek.try_get_brand('unknown'), 
+                    harga=1, 
+                    harga_preview="Rp. 1", 
+                    quantity=1)
+                barang.save()
+            
+            transaction_data.barangs.add(barang)
+
+        transaction_data.harga_total = total_price
+        transaction_data.save()
+
     def __str__(self):
         return "{}-{}-{}".format(self.tanggal, self.pembeli, self.harga_total)
 
@@ -154,11 +192,9 @@ class DetailPenjualan(models.Model):
     id_detail_penjualan = models.IntegerField(primary_key=True)
     penjualan = models.ForeignKey(Penjualan, on_delete=models.CASCADE)
     barang = models.ForeignKey(Barang, on_delete=models.CASCADE)
-    jumlah = models.IntegerField()
-    total_harga = models.IntegerField()
 
     def __str__(self):
-        return "{}-{}-{}".format(self.penjualan, self.barang, self.jumlah)
+        return "{}-{}".format(self.penjualan, self.barang)
 
 
 class Order(models.Model):
