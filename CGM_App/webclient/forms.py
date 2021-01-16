@@ -37,3 +37,9 @@ class EditOrderForm(forms.Form):
     harga_barang = forms.IntegerField(label='harga_barang')
     note = forms.CharField(label='note')
     tanggal_datang = forms.DateTimeField(label='tanggal_datang', required=False)
+
+
+class PostTransactionItemForm(forms.Form):
+    customer = forms.CharField(label='customer')
+    datetime = forms.DateTimeField(label='datetime')
+    json_list_of_items = forms.CharField(label='json_list_of_items')
