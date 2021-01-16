@@ -5,7 +5,6 @@ from django.contrib import messages
 from .forms import *
 from datacenter.models import *
 from django.contrib.auth.decorators import login_required
-import json
 
 
 # Create your views here.
@@ -36,7 +35,7 @@ def transaction_history(request):
     if request.method == 'POST':
         post_form = PostTransactionItemForm(request.POST)
         if post_form.is_valid():
-            list_of_items = json.loads(post_form.cleaned_data["json_list_of_items"])
+            penjualan = Penjualan.save_form(post_form)
             messages.success(request, "Save data success!")
         else:
             messages.error(request, "Invalid form input")
