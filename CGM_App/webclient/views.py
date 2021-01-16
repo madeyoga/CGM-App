@@ -2,9 +2,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
-from .forms import PostNewItemForm, EditItemForm, PostNewOrderForm, EditOrderForm
+from .forms import *
 from datacenter.models import *
 from django.contrib.auth.decorators import login_required
+import json
 
 
 # Create your views here.
@@ -31,9 +32,16 @@ def order_history(request):
     return render(request, 'webclient/webclient_order_history.html', {'data': list(order_histories)})
 
 
-@login_required(login_url='/login/')
-def penjualan(request):
-    return HttpResponse("Penjualan")
+def transaction_history(request):
+    if request.method == 'POST':
+        post_form = PostTransactionItemForm(request.POST)
+        if post_form.is_valid():
+            list_of_items = json.loads(post_form.cleaned_data["json_list_of_items"])
+            messages.success(request, "Save data success!")
+        else:
+            messages.error(request, "Invalid form input")
+        return HttpResponseRedirect("/webclient/transaksi/")
+    return render(request, 'webclient/webclient_belanja_history.html')
 
 
 @login_required(login_url='/login/')
@@ -113,11 +121,3 @@ def delete_order(request, order_id):
     else:
         messages.error(request, "Only super user can delete data.")
     return HttpResponseRedirect("/webclient/order/")
-
-
-# Forms for Transaction
-
-
-def transaction_history(request):
-    sells = Penjualan.objects.all().values()
-    return render(request, 'webclient/transaction_history.html', {'data': list(sells)})
