@@ -5,6 +5,7 @@ from django.contrib import messages
 from .forms import *
 from datacenter.models import *
 from django.contrib.auth.decorators import login_required
+from django.forms.models import model_to_dict
 
 
 # Create your views here.
@@ -31,7 +32,8 @@ def order_history(request):
     return render(request, 'webclient/webclient_order_history.html', {'data': list(order_histories)})
 
 
-def transaction_history(request):
+@login_required(login_url='/login/')
+def transaction(request):
     if request.method == 'POST':
         post_form = PostTransactionItemForm(request.POST)
         if post_form.is_valid():
@@ -40,7 +42,25 @@ def transaction_history(request):
         else:
             messages.error(request, "Invalid form input")
         return HttpResponseRedirect("/webclient/transaksi/")
-    return render(request, 'webclient/webclient_belanja_history.html')
+    return render(request, 'webclient/webclient_transaction_history_submission.html')
+
+
+@login_required(login_url='/login/')
+@require_http_methods(["GET"])
+def transaction_history(request):
+    transactions = Penjualan.objects.all()
+    list_of_transactions = []
+    for transaction in transactions.iterator():
+        temp_transaction = model_to_dict(transaction)
+        temp_transaction['nama_pembeli'] = transaction.pembeli.nama_pembeli
+        # temp_transaction['barangs'] = list(transaction.barangs.all().values())
+        for index, item in enumerate(temp_transaction['barangs']):
+            temp_transaction['barangs'][index] = model_to_dict(item)
+        list_of_transactions.append(temp_transaction)
+    print(list_of_transactions)
+    return render(request, 
+                  'webclient/webclient_transaction_history.html', 
+                  {'data': list_of_transactions})
 
 
 @login_required(login_url='/login/')

@@ -22,5 +22,6 @@ urlpatterns = [
     path('delete_order/<int:order_id>', views.delete_order, name='webclient_delete_order'),
 
     # Transaksi
-    path('transaksi/', views.transaction_history, name='webclient_transaction')
+    path('transaksi/', views.transaction, name='webclient_transaction'),
+    path('transaction_history/', views.transaction_history, name='webclient_transaction_history')
 ]
