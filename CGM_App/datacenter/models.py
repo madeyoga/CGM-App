@@ -174,8 +174,8 @@ class Penjualan(models.Model):
                 barang = Barang.objects.create(
                     nama_barang=item_name, 
                     merek=Merek.try_get_brand('unknown'), 
-                    harga=1, 
-                    harga_preview="Rp. 1", 
+                    harga=int(item['harga']),
+                    harga_preview="Rp. " + item['harga'], 
                     quantity=1)
                 barang.save()
             
