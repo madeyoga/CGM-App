@@ -117,7 +117,7 @@ class Barang(models.Model):
 
             item_brand = Merek.try_get_brand(item_brand)
 
-            target_item.merek_barang = item_brand
+            target_item.merek = item_brand
             target_item.nama_barang = item_name
             target_item.harga = item_price
             target_item.harga_preview = item_price_preview
