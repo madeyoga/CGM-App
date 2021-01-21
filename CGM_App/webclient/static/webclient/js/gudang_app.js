@@ -54,7 +54,9 @@ var editApp = new Vue({
 		namaMerek: null,
 		partNomerBarang: null,
 		quantity: null,
-		deleteUrl: null
+		deleteUrl: null,
+		location: null,
+		previewImage: null,
 	},
 	methods: {
 		processNumber: function() {
@@ -78,10 +80,45 @@ var editApp = new Vue({
 			this.partNomerBarang = selectedData.part_nomor_barang;
 			this.quantity = selectedData.quantity;
 			this.deleteUrl = "/webclient/delete_item/" + selectedData.id;
+			this.location = selectedData.location;
+			if (selectedData.preview_image != '-' && selectedData.preview_image != '' && selectedData.preview_image != null) {
+				this.previewImage = "/media/" + selectedData.preview_image;
+			}
+			else {
+				this.previewImage = null;
+			}
+			document.getElementById('upload_filename_modal').innerHTML = 'Choose File';
+
 			$('#edit_modal').modal('show');
 		},
 		closeModal: function() {
 			$("#edit_modal").modal("hide");
 		},
 	}
-})
+});
+
+$("#preview_image").change(function(){
+	readURL(this, '#live_preview');
+	document.getElementById("upload_filename").innerHTML = this.value;
+});
+
+$("#live_preview").click(function() {
+	$('#preview_image').trigger('click');
+});
+
+$("#preview_image_modal").change(function(){
+	readURL(this, '#live_preview_modal');
+	document.getElementById("upload_filename_modal").innerHTML = this.value;
+});
+
+function readURL(input, previewElementId) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $(previewElementId).attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
