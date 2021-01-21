@@ -40,6 +40,8 @@ class Barang(models.Model):
     harga_preview = models.CharField(max_length=16, default="Rp. -")
     part_nomor_barang = models.CharField(max_length=128)
     quantity = models.IntegerField()
+    location = models.CharField(max_length=256, default='-')
+    preview_image = models.ImageField(upload_to='items/', default=None, null=True)
 
     @staticmethod
     def get_all():
@@ -51,13 +53,15 @@ class Barang(models.Model):
         return items
 
     @staticmethod
-    def save_form(post_form):
+    def save_form(post_form, files):
         item_name = post_form.cleaned_data['nama_barang']
         item_brand = post_form.cleaned_data['merek_barang']
         item_price = post_form.cleaned_data['harga_barang']
         item_price_preview = post_form.cleaned_data['harga_barang_preview']
         item_part_number = post_form.cleaned_data['part_nomer']
         item_stock = post_form.cleaned_data['jumlah_stock_barang']
+        item_location = post_form.cleaned_data['location']
+        item_image = files['preview_image']
 
         # Check brand
         if not Merek.objects.filter(nama_merek=item_brand).exists():
@@ -71,19 +75,23 @@ class Barang(models.Model):
                                          harga=item_price,
                                          harga_preview=item_price_preview,
                                          part_nomor_barang=item_part_number,
-                                         quantity=item_stock)
+                                         quantity=item_stock,
+                                         location=item_location,
+                                         preview_image=item_image)
         new_item.save()
 
         return new_item
 
     @staticmethod
-    def save_post_request(post):
+    def save_post_request(post, files):
         item_name = post.get('nama_barang', '')
         item_brand = post.get('merek_barang', '')
         item_price = post.get('harga_barang', 50)
         item_price_preview = post.get('harga_barang_preview', item_price)
         item_part_number = post.get('part_nomer', '')
         item_stock = post.get('jumlah_stock_barang', 0)
+        item_location = post_form.cleaned_data['location']
+        item_image = files['preview_image']
 
         # Check brand
         if not Merek.objects.filter(nama_merek=item_brand).exists():
@@ -97,13 +105,15 @@ class Barang(models.Model):
                                          harga=item_price,
                                          harga_preview=item_price_preview,
                                          part_nomor_barang=item_part_number,
-                                         quantity=item_stock)
+                                         quantity=item_stock,
+                                         location=item_location,
+                                         preview_image=item_image)
         new_item.save()
 
         return new_item
 
     @staticmethod
-    def edit_item(edit_form):
+    def edit_item(edit_form, files):
         item_id = int(edit_form.cleaned_data['id_barang'])
 
         if Barang.objects.filter(id=item_id).exists():
@@ -114,6 +124,10 @@ class Barang(models.Model):
             item_price_preview = edit_form.cleaned_data['harga_barang_preview']
             item_part_number = edit_form.cleaned_data['part_nomer']
             item_stock = edit_form.cleaned_data['jumlah_stock_barang']
+            item_location = edit_form.cleaned_data['location']
+            item_image = files.get('preview_image', None)
+
+            print(item_image)
 
             item_brand = Merek.try_get_brand(item_brand)
 
@@ -123,6 +137,10 @@ class Barang(models.Model):
             target_item.harga_preview = item_price_preview
             target_item.part_nomor_barang = item_part_number
             target_item.quantity = item_stock
+            target_item.location = item_location
+
+            if item_image is not None:
+                target_item.preview_image = item_image
 
             target_item.save()
 
