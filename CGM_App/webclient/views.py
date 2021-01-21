@@ -12,7 +12,8 @@ from django.forms.models import model_to_dict
 @login_required(login_url='/login/')
 def index(request):
     items = Barang.objects.all().values('id', 'nama_barang', 'harga', 'harga_preview', 'quantity',
-                                        'part_nomor_barang', 'merek__nama_merek')
+                                        'part_nomor_barang', 'merek__nama_merek', 
+                                        'preview_image', 'location')
     return render(request,
                   'webclient/webclient_gudang.html',
                   {"Status": "OK", "data": list(items)})
@@ -73,9 +74,9 @@ def pembeli(request):
 
 @require_http_methods(["POST"])
 def post_item(request):
-    post_form = PostNewItemForm(request.POST)
+    post_form = PostNewItemForm(request.POST, request.FILES)
     if post_form.is_valid():
-        Barang.save_form(post_form)
+        Barang.save_form(post_form, request.FILES)
         messages.success(request, "Save data success!")
     else:
         messages.error(request, "Please make sure to fill all the fields before submit form")
@@ -84,9 +85,9 @@ def post_item(request):
 
 @require_http_methods(["POST"])
 def edit_item(request):
-    edit_form = EditItemForm(request.POST)
+    edit_form = EditItemForm(request.POST, request.FILES)
     if edit_form.is_valid():
-        edited_item = Barang.edit_item(edit_form)
+        edited_item = Barang.edit_item(edit_form, request.FILES)
         if edited_item is None:
             messages.error(request, "Error when updating data (INVALID_ITEM_ID)! Please contact admin!")
         else:
