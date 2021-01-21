@@ -159,7 +159,7 @@
 		<div class="modal fade" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="edit_modal_title" aria-hidden="true">
 			<div class="modal-dialog modal-lg" role="document">
 				<!-- FORM -->
-				<form action="/webclient/edit_item/" method="POST">
+				<form action="/webclient/edit_item/" method="POST" enctype="multipart/form-data">
 					{% csrf_token %}
 					<div class="modal-content">
 						<div class="modal-header">
