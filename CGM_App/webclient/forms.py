@@ -6,8 +6,9 @@ class PostNewItemForm(forms.Form):
     merek_barang = forms.CharField(label='merek_barang')
     harga_barang = forms.IntegerField(label='harga_barang', min_value=50)
     harga_barang_preview = forms.CharField(label='harga_barang_preview')
-    part_nomer = forms.CharField(label='part_nomer')
+    part_nomer = forms.CharField(label='part_nomer', required=False)
     jumlah_stock_barang = forms.IntegerField(label='jumlah_stock_barang', min_value=0)
+    satuan_barang = forms.CharField(label='satuan_barang')
     location = forms.CharField(label='location', required=False)
     preview_image = forms.ImageField(label='preview_image', required=False)
 
@@ -18,8 +19,9 @@ class EditItemForm(forms.Form):
     merek_barang = forms.CharField(label='merek_barang')
     harga_barang = forms.IntegerField(label='harga_barang', min_value=50)
     harga_barang_preview = forms.CharField(label='harga_barang_preview')
-    part_nomer = forms.CharField(label='part_nomer')
+    part_nomer = forms.CharField(label='part_nomer', required=False)
     jumlah_stock_barang = forms.IntegerField(label='jumlah_stock_barang', min_value=0)
+    satuan_barang = forms.CharField(label='satuan_barang')
     location = forms.CharField(label='location', required=False)
     preview_image = forms.ImageField(label='preview_image', required=False)
 
