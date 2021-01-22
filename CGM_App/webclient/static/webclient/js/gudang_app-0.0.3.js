@@ -54,6 +54,7 @@ var editApp = new Vue({
 		namaMerek: null,
 		partNomerBarang: null,
 		quantity: null,
+		unitType: null,
 		deleteUrl: null,
 		location: null,
 		previewImage: null,
@@ -79,6 +80,7 @@ var editApp = new Vue({
 			this.hargaBarangPreview = selectedData.harga_preview;
 			this.partNomerBarang = selectedData.part_nomor_barang;
 			this.quantity = selectedData.quantity;
+			this.unitType = selectedData.unit_type;
 			this.deleteUrl = "/webclient/delete_item/" + selectedData.id;
 			this.location = selectedData.location;
 			if (selectedData.preview_image != '-' && selectedData.preview_image != '' && selectedData.preview_image != null) {
