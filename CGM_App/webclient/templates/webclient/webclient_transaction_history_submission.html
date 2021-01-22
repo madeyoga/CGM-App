@@ -51,13 +51,15 @@
 							<thead>
 								<tr>
 									<th>Barang</th>
+									<th>Merek</th>
 									<th>Harga</th>
 									<th>TombolHapus</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr v-for="(item, index) in listOfItems" v-bind:key="index" v-bind:id="index">
-									<td><input class="form-control listbarang" v-model="item.barang"></td>
+									<td><input class="form-control listitems" v-model="item.barang"></td>
+									<td><input class="form-control listbrands" v-model="item.merek"></td>
 									<td><input class="form-control" type="number" v-model="item.harga"></td>
 									<td>
 										<button type="button" v-on:click="removeItem(index)" class="btn btn-danger"><i class="fa fa-trash"></i></button>
@@ -67,6 +69,7 @@
 							<tfoot>
 								<tr>
 									<th>Barang</th>
+									<th>Merek</th>
 									<th>Harga</th>
 									<th>TombolHapus</th>
 								</tr>
@@ -85,6 +88,9 @@
 {% endblock %}
 
 {% block scripts %}
+	{{ items|json_script:"availableItems" }}
+	{{ brands|json_script:"availableBrands" }}
+
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script>
 		function onSubmit() {
@@ -93,7 +99,16 @@
 			console.log(listElement.value);
 			return true;
 		}
-		var initialData = null;
+
+		var availableItems = [];
+		for (var item of JSON.parse(document.getElementById('availableItems').textContent)) {
+			availableItems.push(item.nama_barang);
+		}
+
+		var availableBrands = [];
+		for (var brand of JSON.parse(document.getElementById('availableBrands').textContent)) {
+			availableBrands.push(brand.nama_merek);
+		}
 
 		var availableTags = [
 			"ActionScript",
@@ -119,12 +134,6 @@
 			"Scala",
 			"Scheme"
 		];
-
-		$(function() {
-			$("#tags").autocomplete({
-				source: availableTags
-			});
-		});
 	</script>
-	<script src="{% static 'webclient/js/belanja_history_app.js' %}" type="text/javascript"></script>
+	<script src="{% static 'webclient/js/transaction-0.0.1.js' %}" type="text/javascript"></script>
 {% endblock %}
