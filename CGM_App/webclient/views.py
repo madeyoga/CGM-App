@@ -13,7 +13,7 @@ from django.forms.models import model_to_dict
 def index(request):
     items = Barang.objects.all().values('id', 'nama_barang', 'harga', 'harga_preview', 'quantity',
                                         'part_nomor_barang', 'merek__nama_merek', 
-                                        'preview_image', 'location')
+                                        'preview_image', 'location', 'unit_type')
     return render(request,
                   'webclient/webclient_gudang.html',
                   {"Status": "OK", "data": list(items)})
@@ -43,7 +43,12 @@ def transaction(request):
         else:
             messages.error(request, "Invalid form input")
         return HttpResponseRedirect("/webclient/transaksi/")
-    return render(request, 'webclient/webclient_transaction_history_submission.html')
+    
+    items = Barang.objects.all().values('nama_barang')
+    brands = Merek.objects.all().values('nama_merek')
+    return render(request, 
+                  'webclient/webclient_transaction_history_submission.html', 
+                  {'items': list(items), 'brands': list(brands)})
 
 
 @login_required(login_url='/login/')
@@ -57,8 +62,8 @@ def transaction_history(request):
         # temp_transaction['barangs'] = list(transaction.barangs.all().values())
         for index, item in enumerate(temp_transaction['barangs']):
             temp_transaction['barangs'][index] = model_to_dict(item)
+            del temp_transaction['barangs'][index]['preview_image']
         list_of_transactions.append(temp_transaction)
-    print(list_of_transactions)
     return render(request, 
                   'webclient/webclient_transaction_history.html', 
                   {'data': list_of_transactions})
