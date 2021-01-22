@@ -40,6 +40,7 @@ class Barang(models.Model):
     harga_preview = models.CharField(max_length=16, default="Rp. -")
     part_nomor_barang = models.CharField(max_length=128)
     quantity = models.IntegerField()
+    unit_type = models.CharField(max_length=128, default='pcs')
     location = models.CharField(max_length=256, default='-')
     preview_image = models.ImageField(upload_to='items/', default=None, null=True)
 
@@ -60,6 +61,7 @@ class Barang(models.Model):
         item_price_preview = post_form.cleaned_data['harga_barang_preview']
         item_part_number = post_form.cleaned_data['part_nomer']
         item_stock = post_form.cleaned_data['jumlah_stock_barang']
+        item_unit_type = post_form.cleaned_data['satuan_barang']
         item_location = post_form.cleaned_data['location']
         item_image = files.get('preview_image', None)
 
@@ -76,6 +78,7 @@ class Barang(models.Model):
                                          harga_preview=item_price_preview,
                                          part_nomor_barang=item_part_number,
                                          quantity=item_stock,
+                                         unit_type=item_unit_type,
                                          location=item_location,
                                          preview_image=item_image)
         new_item.save()
@@ -89,7 +92,8 @@ class Barang(models.Model):
         item_price = post.get('harga_barang', 50)
         item_price_preview = post.get('harga_barang_preview', item_price)
         item_part_number = post.get('part_nomer', '')
-        item_stock = post.get('jumlah_stock_barang', 0)
+        item_stock = post.get('jumlah_stock_barang', '1')
+        item_unit_type = post.cleaned_data['satuan_barang']
         item_location = post_form.cleaned_data['location']
         item_image = files['preview_image']
 
@@ -106,6 +110,7 @@ class Barang(models.Model):
                                          harga_preview=item_price_preview,
                                          part_nomor_barang=item_part_number,
                                          quantity=item_stock,
+                                         unit_type=item_unit_type,
                                          location=item_location,
                                          preview_image=item_image)
         new_item.save()
@@ -124,10 +129,9 @@ class Barang(models.Model):
             item_price_preview = edit_form.cleaned_data['harga_barang_preview']
             item_part_number = edit_form.cleaned_data['part_nomer']
             item_stock = edit_form.cleaned_data['jumlah_stock_barang']
+            item_unit_type = edit_form.cleaned_data['satuan_barang']
             item_location = edit_form.cleaned_data['location']
             item_image = files.get('preview_image', None)
-
-            print(item_image)
 
             item_brand = Merek.try_get_brand(item_brand)
 
@@ -137,6 +141,7 @@ class Barang(models.Model):
             target_item.harga_preview = item_price_preview
             target_item.part_nomor_barang = item_part_number
             target_item.quantity = item_stock
+            target_item.unit_type = item_unit_type
             target_item.location = item_location
 
             if item_image is not None:
@@ -194,7 +199,8 @@ class Penjualan(models.Model):
                     merek=Merek.try_get_brand('unknown'), 
                     harga=int(item['harga']),
                     harga_preview="Rp. " + item['harga'], 
-                    quantity=1)
+                    quantity=1,
+                    unit_type='pcs')
                 barang.save()
             
             transaction_data.barangs.add(barang)
