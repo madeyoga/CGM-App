@@ -61,7 +61,7 @@ class Barang(models.Model):
         item_part_number = post_form.cleaned_data['part_nomer']
         item_stock = post_form.cleaned_data['jumlah_stock_barang']
         item_location = post_form.cleaned_data['location']
-        item_image = files['preview_image']
+        item_image = files.get('preview_image', None)
 
         # Check brand
         if not Merek.objects.filter(nama_merek=item_brand).exists():
